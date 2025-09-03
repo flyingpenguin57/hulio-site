@@ -1,26 +1,218 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* md-editor-rt 暗色主题支持 */
+.dark .md-editor { background-color: #1f2937 !important; border-color: #374151 !important; }
+.dark .md-editor .md-toolbar { background-color: #374151 !important; border-bottom-color: #4b5563 !important; }
+.dark .md-editor .md-toolbar button { color: #d1d5db !important; }
+.dark .md-editor .md-toolbar button:hover { background-color: #4b5563 !important; }
+.dark .md-editor .md-content { background-color: #1f2937 !important; color: #f9fafb !important; }
+.dark .md-editor .md-preview { background-color: #1f2937 !important; color: #f9fafb !important; }
+
+/* 暗色主题下的工具栏按钮 */
+.dark .md-editor .md-toolbar button[data-name="bold"] { color: #d1d5db !important; }
+.dark .md-editor .md-toolbar button[data-name="italic"] { color: #d1d5db !important; }
+.dark .md-editor .md-toolbar button[data-name="strikeThrough"] { color: #d1d5db !important; }
+.dark .md-editor .md-toolbar button[data-name="unorderedList"] { color: #d1d5db !important; }
+.dark .md-editor .md-toolbar button[data-name="orderedList"] { color: #d1d5db !important; }
+.dark .md-editor .md-toolbar button[data-name="taskList"] { color: #d1d5db !important; }
+.dark .md-editor .md-toolbar button[data-name="codeBlock"] { color: #d1d5db !important; }
+.dark .md-editor .md-toolbar button[data-name="pageBreak"] { color: #d1d5db !important; }
+
+/* 暗色主题下的内容区域 */
+.dark .md-editor .md-content h1 { color: #f9fafb !important; }
+.dark .md-editor .md-content h2 { color: #f9fafb !important; }
+.dark .md-editor .md-content h3 { color: #f9fafb !important; }
+.dark .md-editor .md-content h4 { color: #f9fafb !important; }
+.dark .md-editor .md-content h5 { color: #f9fafb !important; }
+.dark .md-editor .md-content h6 { color: #f9fafb !important; }
+.dark .md-editor .md-content p { color: #d1d5db !important; }
+.dark .md-editor .md-content li { color: #d1d5db !important; }
+.dark .md-editor .md-content blockquote { color: #9ca3af !important; border-left-color: #6b7280 !important; }
+.dark .md-editor .md-content code { color: #fbbf24 !important; background-color: #374151 !important; }
+.dark .md-editor .md-content pre { background-color: #374151 !important; color: #d1d5db !important; }
+.dark .md-editor .md-content table { border-color: #6b7280 !important; }
+.dark .md-editor .md-content th { border-color: #6b7280 !important; color: #f9fafb !important; }
+.dark .md-editor .md-content td { border-color: #6b7280 !important; color: #d1d5db !important; }
+
+/* 暗色主题下的预览区域 */
+.dark .md-editor .md-preview h1 { color: #f9fafb !important; }
+.dark .md-editor .md-preview h2 { color: #f9fafb !important; }
+.dark .md-editor .md-preview h3 { color: #f9fafb !important; }
+.dark .md-editor .md-preview h4 { color: #f9fafb !important; }
+.dark .md-editor .md-preview h5 { color: #f9fafb !important; }
+.dark .md-editor .md-preview h6 { color: #f9fafb !important; }
+.dark .md-editor .md-preview p { color: #d1d5db !important; }
+.dark .md-editor .md-preview li { color: #d1d5db !important; }
+.dark .md-editor .md-preview blockquote { color: #9ca3af !important; border-left-color: #6b7280 !important; }
+.dark .md-editor .md-preview code { color: #fbbf24 !important; background-color: #374151 !important; }
+.dark .md-editor .md-preview pre { background-color: #374151 !important; color: #d1d5db !important; }
+.dark .md-editor .md-preview table { border-color: #6b7280 !important; }
+.dark .md-editor .md-preview th { border-color: #6b7280 !important; color: #f9fafb !important; }
+.dark .md-editor .md-preview td { border-color: #6b7280 !important; color: #d1d5db !important; }
+
+/* Markdown 内容样式优化 */
+.markdown-content {
+  line-height: 1.7;
+}
+
+.markdown-content > *:first-child {
+  margin-top: 0;
+}
+
+.markdown-content > *:last-child {
+  margin-bottom: 0;
+}
+
+/* 代码高亮 */
+.markdown-content pre {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.markdown-content pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* 行内代码 */
+.markdown-content :not(pre) > code {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* 引用块 */
+.markdown-content blockquote {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  border-left: 4px solid #3b82f6;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 8px 8px 0;
+  position: relative;
+}
+
+.markdown-content blockquote::before {
+  content: '"';
+  font-size: 3rem;
+  color: #3b82f6;
+  position: absolute;
+  top: -0.5rem;
+  left: 0.5rem;
+  font-family: serif;
+}
+
+/* 表格样式增强 */
+.markdown-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.markdown-content th {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.markdown-content td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.markdown-content tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.dark .markdown-content tr:nth-child(even) {
+  background-color: #374151;
+}
+
+/* 链接样式增强 */
+.markdown-content a {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.markdown-content a:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transform: translateY(-1px);
+}
+
+/* 列表样式增强 */
+.markdown-content ul, .markdown-content ol {
+  padding-left: 1.5rem;
+}
+
+.markdown-content li {
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.markdown-content ul li::marker {
+  color: #3b82f6;
+  font-weight: bold;
+}
+
+.markdown-content ol li::marker {
+  color: #3b82f6;
+  font-weight: bold;
+}
+
+/* 水平分割线 */
+.markdown-content hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin: 2rem 0;
+  border-radius: 1px;
+}
+
+/* 图片样式增强 */
+.markdown-content img {
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.markdown-content img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }

@@ -9,7 +9,7 @@ export async function GET() {
     
     const result = await sql`
       SELECT 
-        id, name, description, url, github, picture,
+        id, name, description, url, github, picture, status,
         created_time, updated_time
       FROM project 
       ORDER BY created_time DESC
@@ -39,7 +39,8 @@ export async function POST(request: NextRequest) {
       description, 
       url, 
       github, 
-      picture 
+      picture,
+      status = 0
     }: CreateProjectRequest = body;
 
     // 验证必填字段
@@ -63,7 +64,7 @@ export async function POST(request: NextRequest) {
     // 插入项目
     const result = await sql`
       INSERT INTO project (
-        name, description, url, github, picture, 
+        name, description, url, github, picture, status,
         created_time, updated_time
       ) VALUES (
         ${name.trim()}, 
@@ -71,9 +72,10 @@ export async function POST(request: NextRequest) {
         ${url?.trim() || null}, 
         ${github?.trim() || null}, 
         ${picture?.trim() || null}, 
+        ${status},
         NOW(), 
         NOW()
-      ) RETURNING id, name, description, url, github, picture,
+      ) RETURNING id, name, description, url, github, picture, status,
                   created_time, updated_time
     `;
 

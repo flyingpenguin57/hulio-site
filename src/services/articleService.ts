@@ -13,7 +13,8 @@ export class ArticleService {
         throw new Error(result.error || 'Failed to fetch articles');
       }
       
-      return result.data as Article[];
+      // API 返回的是 { success: true, articles: [...], total, page, limit }
+      return result.articles as Article[];
     } catch (error) {
       console.error('Error fetching articles:', error);
       throw error;

@@ -23,7 +23,7 @@ export async function GET(request: NextRequest, { params }: ProjectParams) {
     
     const result = await sql`
       SELECT 
-        id, name, description, url, github, picture,
+        id, name, description, url, github, picture, status,
         created_time, updated_time
       FROM project 
       WHERE id = ${projectId}
@@ -70,11 +70,13 @@ export async function PUT(request: NextRequest, { params }: ProjectParams) {
       description, 
       url, 
       github, 
-      picture 
+      picture,
+      status
     }: UpdateProjectRequest = body;
 
     // 验证至少有一个字段需要更新
-    if (!name && !description && !url && !github && !picture) {
+    if (name === undefined && description === undefined && url === undefined && 
+        github === undefined && picture === undefined && status === undefined) {
       return NextResponse.json(
         { success: false, error: 'At least one field must be provided for update' },
         { status: 400 }
@@ -107,6 +109,10 @@ export async function PUT(request: NextRequest, { params }: ProjectParams) {
       updateFields.push('picture = $' + (updateValues.length + 1));
       updateValues.push(picture?.trim() || null);
     }
+    if (status !== undefined) {
+      updateFields.push('status = $' + (updateValues.length + 1));
+      updateValues.push(status);
+    }
     
     // 添加更新时间
     updateFields.push('updated_time = NOW()');
@@ -115,7 +121,7 @@ export async function PUT(request: NextRequest, { params }: ProjectParams) {
       UPDATE project 
       SET ${updateFields.join(', ')}
       WHERE id = $${updateValues.length + 1}
-      RETURNING id, name, description, url, github, picture,
+      RETURNING id, name, description, url, github, picture, status,
                 created_time, updated_time
     `;
     

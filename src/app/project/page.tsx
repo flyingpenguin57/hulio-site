@@ -1,91 +1,50 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-
-interface Project {
-  id: number;
-  name: string;
-  description: string;
-  url: string;
-  github: string;
-  picture: string;
-  created_time: string;
-  updated_time: string;
-}
+import { useState, useEffect } from 'react';
+import { Project } from '@/app/lib/types';
 
 export default function ProjectsPage() {
   const [filter, setFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // 写死的项目数据
-  const projects: Project[] = [
-    {
-      id: 1,
-      name: 'E-commerce Platform',
-      description: 'A full-stack e-commerce solution built with React, Node.js, and PostgreSQL. Features include user authentication, payment processing with Stripe, real-time inventory management, and a comprehensive admin dashboard.',
-      url: 'https://ecommerce-demo.com',
-      github: 'https://github.com/username/ecommerce-platform',
-      picture: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop',
-      created_time: '2024-01-15T10:00:00Z',
-      updated_time: '2024-03-20T14:30:00Z'
-    },
-    {
-      id: 2,
-      name: 'Task Management App',
-      description: 'Real-time collaborative task management application with Next.js, TypeScript, and Socket.io. Features include real-time updates, user roles, advanced filtering, and drag-and-drop functionality.',
-      url: 'https://task-manager-demo.com',
-      github: 'https://github.com/username/task-manager',
-      picture: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=600&fit=crop',
-      created_time: '2024-02-10T09:00:00Z',
-      updated_time: '2024-04-05T16:45:00Z'
-    },
-    {
-      id: 3,
-      name: 'API Gateway Service',
-      description: 'High-performance microservices API gateway built with Node.js, Express, and Redis. Features include authentication, rate limiting, request routing, and comprehensive monitoring.',
-      url: 'https://api-gateway-demo.com',
-      github: 'https://github.com/username/api-gateway',
-      picture: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=600&fit=crop',
-      created_time: '2023-12-05T11:00:00Z',
-      updated_time: '2024-02-28T13:20:00Z'
-    },
-    {
-      id: 4,
-      name: 'Portfolio Website',
-      description: 'Modern portfolio website built with Next.js 15, TypeScript, and Tailwind CSS. Features include dark mode, responsive design, blog system, and contact forms.',
-      url: 'https://portfolio-demo.com',
-      github: 'https://github.com/username/portfolio-website',
-      picture: 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=800&h=600&fit=crop',
-      created_time: '2024-03-01T08:00:00Z',
-      updated_time: '2024-05-10T10:15:00Z'
-    },
-    {
-      id: 5,
-      name: 'Weather Dashboard',
-      description: 'Interactive weather dashboard with real-time data from multiple APIs. Built with React, Chart.js, and OpenWeatherMap API. Features include location search, forecasts, and historical data.',
-      url: 'https://weather-dashboard-demo.com',
-      github: 'https://github.com/username/weather-dashboard',
-      picture: 'https://images.unsplash.com/photo-1592210454359-9043f067919b?w=800&h=600&fit=crop',
-      created_time: '2024-01-20T15:00:00Z',
-      updated_time: '2024-03-15T12:30:00Z'
-    },
-    {
-      id: 6,
-      name: 'Social Media Analytics',
-      description: 'Comprehensive social media analytics platform with data visualization, reporting tools, and real-time monitoring. Built with Python, Django, and React.',
-      url: 'https://analytics-demo.com',
-      github: 'https://github.com/username/social-analytics',
-      picture: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop',
-      created_time: '2023-11-10T13:00:00Z',
-      updated_time: '2024-01-25T09:45:00Z'
-    }
-  ];
+  // 获取已发布的项目
+  useEffect(() => {
+    const fetchPublishedProjects = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const response = await fetch('/api/projects');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        if (data.success) {
+          // 只显示已发布的项目 (status === 1)
+          const publishedProjects = data.projects.filter((project: Project) => project.status === 1);
+          setProjects(publishedProjects);
+        } else {
+          throw new Error(data.error || 'Failed to fetch projects');
+        }
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+        setError(error instanceof Error ? error.message : 'Failed to fetch projects');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPublishedProjects();
+  }, []);
 
   // 过滤和搜索项目
   const filteredProjects = projects.filter(project => {
     const matchesSearch = project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         project.description.toLowerCase().includes(searchQuery.toLowerCase());
+                         (project.description && project.description.toLowerCase().includes(searchQuery.toLowerCase()));
     
     if (filter === 'all') return matchesSearch;
     if (filter === 'recent') {
@@ -101,7 +60,7 @@ export default function ProjectsPage() {
     return matchesSearch;
   });
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | Date) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -109,7 +68,7 @@ export default function ProjectsPage() {
     });
   };
 
-  const getTimeAgo = (dateString: string) => {
+  const getTimeAgo = (dateString: string | Date) => {
     const now = new Date();
     const date = new Date(dateString);
     const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
@@ -121,6 +80,53 @@ export default function ProjectsPage() {
     if (diffInDays < 365) return `${Math.floor(diffInDays / 30)} months ago`;
     return `${Math.floor(diffInDays / 365)} years ago`;
   };
+
+  // 加载状态
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center py-12">
+            <div className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400">
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Loading projects...
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 错误状态
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center py-12">
+            <div className="text-red-600 dark:text-red-400 mb-4">
+              <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+              <h3 className="text-lg font-medium mb-2">Failed to load projects</h3>
+              <p className="text-gray-600 dark:text-gray-400">{error}</p>
+            </div>
+            <button
+              onClick={() => window.location.reload()}
+              className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200"
+            >
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -146,11 +152,19 @@ export default function ProjectsPage() {
               >
                 {/* Project Image */}
                 <div className="relative overflow-hidden h-48">
-                  <img
-                    src={project.picture}
-                    alt={project.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+                  {project.picture ? (
+                    <img
+                      src={project.picture}
+                      alt={project.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                      <svg className="w-16 h-16 text-white opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                      </svg>
+                    </div>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   
                   {/* Project Links Overlay */}
@@ -215,7 +229,7 @@ export default function ProjectsPage() {
                   </div>
 
                   <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3">
-                    {project.description}
+                    {project.description || 'No description available'}
                   </p>
 
                   {/* Project Meta */}
@@ -240,7 +254,9 @@ export default function ProjectsPage() {
             <div className="text-gray-500 dark:text-gray-400 mb-4">
               {searchQuery 
                 ? `No projects found matching "${searchQuery}"`
-                : 'No projects found'
+                : projects.length === 0 
+                  ? 'No published projects yet'
+                  : 'No projects match the current filter'
               }
             </div>
             {searchQuery && (
@@ -256,7 +272,7 @@ export default function ProjectsPage() {
 
         {/* Stats */}
         <div className="mt-12 text-center text-sm text-gray-500 dark:text-gray-400">
-          Showing {filteredProjects.length} of {projects.length} projects
+          Showing {filteredProjects.length} of {projects.length} published projects
           {filter !== 'all' && ` (${filter} filter applied)`}
         </div>
       </div>

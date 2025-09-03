@@ -11,7 +11,7 @@ function getSql() {
     
     sql = postgres(process.env.POSTGRES_URL, { 
       ssl: 'require', // Neon requires SSL
-      max: 10, // 连接池大小
+      max: 1, // 减少连接池大小，避免并发问题
       idle_timeout: 20, // 空闲连接超时
       connect_timeout: 10, // 连接超时
       // Neon specific optimizations
@@ -45,7 +45,7 @@ export async function initDatabase() {
     const sqlInstance = getSql();
     
     // 检查articles表是否存在
-    const tableExists = await sqlInstance`
+    const articlesTableExists = await sqlInstance`
       SELECT EXISTS (
         SELECT FROM information_schema.tables 
         WHERE table_schema = 'public' 
@@ -53,7 +53,7 @@ export async function initDatabase() {
       );
     `;
 
-    if (!tableExists[0].exists) {
+    if (!articlesTableExists[0].exists) {
       console.log('Creating articles table...');
       await sqlInstance`
         CREATE TABLE articles (
@@ -73,6 +73,35 @@ export async function initDatabase() {
       console.log('Articles table created successfully');
     } else {
       console.log('Articles table already exists');
+    }
+
+    // 检查project表是否存在
+    const projectTableExists = await sqlInstance`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'project'
+      );
+    `;
+
+    if (!projectTableExists[0].exists) {
+      console.log('Creating project table...');
+      await sqlInstance`
+        CREATE TABLE project (
+          id SERIAL PRIMARY KEY,
+          name VARCHAR(100) NOT NULL,
+          description TEXT,
+          url TEXT,
+          github TEXT,
+          picture TEXT,
+          status SMALLINT DEFAULT 0,
+          created_time TIMESTAMP DEFAULT NOW(),
+          updated_time TIMESTAMP DEFAULT NOW()
+        );
+      `;
+      console.log('Project table created successfully');
+    } else {
+      console.log('Project table already exists');
     }
   } catch (error) {
     console.error('Error initializing database:', error);

@@ -46,6 +46,7 @@ export interface Project {
   url: string | null;
   github: string | null;
   picture: string | null;
+  status: number;
   created_time: Date;
   updated_time: Date;
 }
@@ -56,6 +57,7 @@ export interface CreateProjectRequest {
   url?: string;
   github?: string;
   picture?: string;
+  status?: number;
 }
 
 export interface UpdateProjectRequest {
@@ -64,4 +66,5 @@ export interface UpdateProjectRequest {
   url?: string;
   github?: string;
   picture?: string;
+  status?: number;
 }

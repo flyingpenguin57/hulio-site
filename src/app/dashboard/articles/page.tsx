@@ -20,9 +20,10 @@ export default function ArticlesPage() {
     try {
       setLoading(true);
       const data = await ArticleService.getAllArticles();
-      setArticles(data);
+      setArticles(data || []);
     } catch (error) {
       console.error('Error fetching articles:', error);
+      setArticles([]); // 确保错误时设置为空数组而不是 undefined
     } finally {
       setLoading(false);
     }
@@ -36,7 +37,7 @@ export default function ArticlesPage() {
     try {
       setDeleteLoading(id);
       await ArticleService.deleteArticle(id);
-      setArticles(articles.filter(article => article.id !== id));
+      setArticles((articles || []).filter(article => article.id !== id));
     } catch (error) {
       console.error('Error deleting article:', error);
       alert('Failed to delete article');
@@ -48,7 +49,7 @@ export default function ArticlesPage() {
   const handlePublish = async (id: number) => {
     try {
       await ArticleService.publishArticle(id);
-      setArticles(articles.map(article => 
+      setArticles((articles || []).map(article => 
         article.id === id ? { ...article, status: 1 } : article
       ));
     } catch (error) {
@@ -60,7 +61,7 @@ export default function ArticlesPage() {
   const handleSaveAsDraft = async (id: number) => {
     try {
       await ArticleService.saveAsDraft(id);
-      setArticles(articles.map(article => 
+      setArticles((articles || []).map(article => 
         article.id === id ? { ...article, status: 0 } : article
       ));
     } catch (error) {
@@ -72,8 +73,8 @@ export default function ArticlesPage() {
   // 分页计算
   const indexOfLastArticle = currentPage * articlesPerPage;
   const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
-  const currentArticles = articles.slice(indexOfFirstArticle, indexOfLastArticle);
-  const totalPages = Math.ceil(articles.length / articlesPerPage);
+  const currentArticles = (articles || []).slice(indexOfFirstArticle, indexOfLastArticle);
+  const totalPages = Math.ceil((articles || []).length / articlesPerPage);
 
   const getStatusBadge = (status: number) => {
     switch (status) {
@@ -105,7 +106,7 @@ export default function ArticlesPage() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Manage Articles</h1>
               <p className="mt-2 text-gray-600 dark:text-gray-400">
-                {articles.length} articles • {articles.filter(a => a.status === 1).length} published
+                {(articles || []).length} articles • {(articles || []).filter(a => a.status === 1).length} published
               </p>
             </div>
             <Link

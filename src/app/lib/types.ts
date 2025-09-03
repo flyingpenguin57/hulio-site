@@ -15,7 +15,13 @@ export interface Article {
 export interface User {
   id: number;
   username: string;
+  nickname: string;
+  avatar: string;
   email: string;
+  phone: string;
+  status: number;
+  from: number;
+  extinfo: string;
   created_at: Date;
   updated_at: Date;
 }

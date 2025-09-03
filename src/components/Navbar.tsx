@@ -1,13 +1,32 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import UserAvatar from './UserAvatar';
 import ThemeToggle from './ThemeToggle';
+import { UserService } from '@/services/userService';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
+    // 检查用户是否已登录
+    const checkAuthStatus = () => {
+      const loggedIn = UserService.isLoggedIn();
+      setIsLoggedIn(loggedIn);
+      if (loggedIn) {
+        setCurrentUser(UserService.getCurrentUser());
+      }
+    };
+
+    checkAuthStatus();
+    // 监听 localStorage 变化
+    window.addEventListener('storage', checkAuthStatus);
+    return () => window.removeEventListener('storage', checkAuthStatus);
+  }, []);
 
   const menuItems = [
     { name: 'Articles', href: '/articles' },
@@ -84,7 +103,16 @@ const Navbar = () => {
           {/* User Avatar and Theme Toggle */}
           <div className="flex items-center space-x-3">
             <ThemeToggle />
-            <UserAvatar username="User" size="md" />
+            {isLoggedIn ? (
+              <UserAvatar username={currentUser?.nickname || currentUser?.username || "User"} size="md" />
+            ) : (
+              <Link
+                href="/login"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                Sign In
+              </Link>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -174,6 +202,19 @@ const Navbar = () => {
                 {item.name}
               </Link>
             ))}
+            
+            {/* Mobile Auth Links */}
+            {!isLoggedIn && (
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                <Link
+                  href="/login"
+                  className="bg-blue-600 hover:bg-blue-700 text-white block px-3 py-2 rounded-md text-base font-medium transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Sign In
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}

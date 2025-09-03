@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { UserService } from '@/services/userService';
 
 interface UserAvatarProps {
   username?: string;
@@ -14,6 +16,14 @@ const UserAvatar = ({
 }: UserAvatarProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  const handleSignOut = () => {
+    UserService.logout();
+    setIsDropdownOpen(false);
+    // 刷新页面以更新导航栏状态
+    window.location.reload();
+  };
 
   const sizeClasses = {
     sm: 'w-6 h-6 text-xs',
@@ -65,7 +75,10 @@ const UserAvatar = ({
             Dashboard
           </Link>
           
-          <button className="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+          <button 
+            onClick={handleSignOut}
+            className="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+          >
             Sign Out
           </button>
         </div>

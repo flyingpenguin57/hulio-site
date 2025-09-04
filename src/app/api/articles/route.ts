@@ -8,11 +8,12 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '8');
     const category = searchParams.get('category');
+    const includeDrafts = searchParams.get('includeDrafts') === 'true';
     
     const sql = getSql();
     
     // 构建查询条件
-    let whereClause = 'WHERE status = 1';
+    let whereClause = includeDrafts ? 'WHERE status IN (0, 1)' : 'WHERE status = 1';
     const params: string[] = [];
     
     if (category) {

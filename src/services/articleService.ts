@@ -4,9 +4,14 @@ const API_BASE = '/api/articles';
 
 export class ArticleService {
   // 获取所有文章
-  static async getAllArticles(): Promise<Article[]> {
+  static async getAllArticles(includeDrafts: boolean = false): Promise<Article[]> {
     try {
-      const response = await fetch(API_BASE);
+      const url = new URL(API_BASE, window.location.origin);
+      if (includeDrafts) {
+        url.searchParams.set('includeDrafts', 'true');
+      }
+      
+      const response = await fetch(url.toString());
       const result = await response.json();
       
       if (!result.success) {
@@ -22,9 +27,14 @@ export class ArticleService {
   }
 
   // 获取单篇文章
-  static async getArticle(id: number): Promise<Article> {
+  static async getArticle(id: number, incrementView: boolean = true): Promise<Article> {
     try {
-      const response = await fetch(`${API_BASE}/${id}`);
+      const url = new URL(`${API_BASE}/${id}`, window.location.origin);
+      if (!incrementView) {
+        url.searchParams.set('incrementView', 'false');
+      }
+      
+      const response = await fetch(url.toString());
       const result = await response.json();
       
       if (!result.success) {

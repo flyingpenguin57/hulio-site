@@ -32,7 +32,8 @@ export default function EditArticlePage() {
     const loadArticle = async () => {
       try {
         setIsLoading(true);
-        const article = await ArticleService.getArticle(parseInt(articleId));
+        // 编辑文章时不增加阅读量
+        const article = await ArticleService.getArticle(parseInt(articleId), false);
         setTitle(article.title);
         setSummary(article.summary || '');
         setText(article.content);

@@ -78,6 +78,31 @@ export default function ArticlesPage({ searchParams }: ArticlesPageProps) {
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
   };
 
+  // 为每个分类分配不同的颜色
+  const getCategoryColors = (category: string) => {
+    const colorMap: Record<string, { bg: string; text: string; hover: string; active: string }> = {
+      'Programming': {
+        bg: 'bg-green-100 dark:bg-green-900',
+        text: 'text-green-800 dark:text-green-200',
+        hover: 'hover:bg-green-200 dark:hover:bg-green-800',
+        active: 'bg-green-600 text-white'
+      },
+      'Life': {
+        bg: 'bg-purple-100 dark:bg-purple-900',
+        text: 'text-purple-800 dark:text-purple-200',
+        hover: 'hover:bg-purple-200 dark:hover:bg-purple-800',
+        active: 'bg-purple-600 text-white'
+      }
+    };
+    
+    return colorMap[category] || {
+      bg: 'bg-gray-100 dark:bg-gray-700',
+      text: 'text-gray-700 dark:text-gray-300',
+      hover: 'hover:bg-gray-200 dark:hover:bg-gray-600',
+      active: 'bg-blue-600 text-white'
+    };
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -105,19 +130,22 @@ export default function ArticlesPage({ searchParams }: ArticlesPageProps) {
               >
                 All
               </button>
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => fetchArticles(1, category)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
-                    selectedCategory === category
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
+              {categories.map((category) => {
+                const colors = getCategoryColors(category);
+                return (
+                  <button
+                    key={category}
+                    onClick={() => fetchArticles(1, category)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
+                      selectedCategory === category
+                        ? colors.active
+                        : `${colors.bg} ${colors.text} ${colors.hover}`
+                    }`}
+                  >
+                    {category}
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
@@ -146,7 +174,7 @@ export default function ArticlesPage({ searchParams }: ArticlesPageProps) {
                     {/* Category */}
                     {article.category && (
                       <div className="mb-3">
-                        <span className="inline-block px-3 py-1 text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
+                        <span className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getCategoryColors(article.category).bg} ${getCategoryColors(article.category).text}`}>
                           {article.category}
                         </span>
                       </div>

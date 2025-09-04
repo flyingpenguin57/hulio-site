@@ -19,7 +19,8 @@ export default function ArticlesPage() {
   const fetchArticles = async () => {
     try {
       setLoading(true);
-      const data = await ArticleService.getAllArticles();
+      // 管理页面需要包含草稿文章
+      const data = await ArticleService.getAllArticles(true);
       setArticles(data || []);
     } catch (error) {
       console.error('Error fetching articles:', error);
@@ -60,13 +61,25 @@ export default function ArticlesPage() {
 
   const handleSaveAsDraft = async (id: number) => {
     try {
-      await ArticleService.saveAsDraft(id);
+      console.log('🔄 Saving article as draft, ID:', id);
+      
+      // 检查 token 是否存在
+      const token = localStorage.getItem('token');
+      console.log('🔑 Token exists:', !!token);
+      if (!token) {
+        alert('Please login first');
+        return;
+      }
+      
+      const result = await ArticleService.saveAsDraft(id);
+      console.log('✅ Draft save result:', result);
       setArticles((articles || []).map(article => 
         article.id === id ? { ...article, status: 0 } : article
       ));
+      alert('Article saved as draft successfully!');
     } catch (error) {
-      console.error('Error saving as draft:', error);
-      alert('Failed to save as draft');
+      console.error('❌ Error saving as draft:', error);
+      alert('Failed to save as draft: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   };
 
@@ -106,7 +119,7 @@ export default function ArticlesPage() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Manage Articles</h1>
               <p className="mt-2 text-gray-600 dark:text-gray-400">
-                {(articles || []).length} articles • {(articles || []).filter(a => a.status === 1).length} published
+                {(articles || []).length} articles • {(articles || []).filter(a => a.status === 1).length} published • {(articles || []).filter(a => a.status === 0).length} drafts
               </p>
             </div>
             <Link

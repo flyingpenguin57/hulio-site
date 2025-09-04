@@ -1,20 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { UserService } from '@/services/userService';
+import { useUserStore } from '@/stores/userStore';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const router = useRouter();
+  
+  // 使用 Zustand store
+  const { login, isLoading, error, clearError, isAuthenticated } = useUserStore();
 
   // 检查URL参数中的消息
-  useState(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const messageParam = urlParams.get('message');
@@ -22,37 +23,30 @@ export default function LoginPage() {
         setMessage(messageParam);
       }
     }
-  });
+  }, []);
+
+  // 如果已经登录，重定向到 dashboard
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/dashboard');
+    }
+  }, [isAuthenticated, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!username || !password) {
-      setError('Please enter both username and password');
+      clearError();
       return;
     }
 
-    setLoading(true);
-    setError('');
-
     try {
-      const result = await UserService.login({ username, password });
-
-      if (result.success) {
-        // 保存 token 到 localStorage
-        localStorage.setItem('token', result.data.token);
-        localStorage.setItem('user', JSON.stringify(result.data.user));
-        
-        // 跳转到 dashboard
-        router.push('/dashboard');
-      } else {
-        setError(result.message || 'Login failed');
-      }
+      clearError();
+      await login({ username, password });
+      // 登录成功后会自动跳转（通过 useEffect 监听 isAuthenticated）
     } catch (error) {
+      // 错误已经在 store 中处理了
       console.error('Login error:', error);
-      setError(error instanceof Error ? error.message : 'Network error. Please try again.');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -124,10 +118,10 @@ export default function LoginPage() {
             <div>
               <button
                 type="submit"
-                disabled={loading}
+                disabled={isLoading}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
               >
-                {loading ? 'Signing in...' : 'Sign in'}
+                {isLoading ? 'Signing in...' : 'Sign in'}
               </button>
             </div>
           </form>

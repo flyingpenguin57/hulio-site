@@ -1,32 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import UserAvatar from './UserAvatar';
 import ThemeToggle from './ThemeToggle';
-import { UserService } from '@/services/userService';
+import { useUserStore } from '@/stores/userStore';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null);
-
-  useEffect(() => {
-    // 检查用户是否已登录
-    const checkAuthStatus = () => {
-      const loggedIn = UserService.isLoggedIn();
-      setIsLoggedIn(loggedIn);
-      if (loggedIn) {
-        setCurrentUser(UserService.getCurrentUser());
-      }
-    };
-
-    checkAuthStatus();
-    // 监听 localStorage 变化
-    window.addEventListener('storage', checkAuthStatus);
-    return () => window.removeEventListener('storage', checkAuthStatus);
-  }, []);
+  
+  // 使用 Zustand store
+  const { user, isAuthenticated } = useUserStore();
 
   const menuItems = [
     { name: 'Articles', href: '/articles' },
@@ -103,8 +88,8 @@ const Navbar = () => {
           {/* User Avatar and Theme Toggle */}
           <div className="flex items-center space-x-3">
             <ThemeToggle />
-            {isLoggedIn ? (
-              <UserAvatar username={currentUser?.nickname || currentUser?.username || "User"} size="md" />
+            {isAuthenticated ? (
+              <UserAvatar username={user?.nickname || user?.username || "User"} size="md" />
             ) : (
               <Link
                 href="/login"
@@ -204,7 +189,7 @@ const Navbar = () => {
             ))}
             
             {/* Mobile Auth Links */}
-            {!isLoggedIn && (
+            {!isAuthenticated && (
               <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
                 <Link
                   href="/login"

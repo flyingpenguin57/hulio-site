@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { UserService } from '@/services/userService';
+import { useUserStore } from '@/stores/userStore';
 
 interface UserAvatarProps {
   username?: string;
@@ -17,12 +17,15 @@ const UserAvatar = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  
+  // 使用 Zustand store
+  const { logout } = useUserStore();
 
   const handleSignOut = () => {
-    UserService.logout();
+    logout();
     setIsDropdownOpen(false);
-    // 刷新页面以更新导航栏状态
-    window.location.reload();
+    // 重定向到首页
+    router.push('/');
   };
 
   const sizeClasses = {

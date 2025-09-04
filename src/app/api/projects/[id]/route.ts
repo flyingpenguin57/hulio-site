@@ -86,8 +86,8 @@ export async function PUT(request: NextRequest, { params }: ProjectParams) {
     const sql = getSql();
     
     // 构建更新查询
-    let updateFields = [];
-    let updateValues = [];
+    const updateFields = [];
+    const updateValues = [];
     
     if (name !== undefined) {
       updateFields.push('name = $' + (updateValues.length + 1));

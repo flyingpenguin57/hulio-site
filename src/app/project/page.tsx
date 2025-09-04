@@ -117,7 +117,7 @@ export default function ProjectsPage() {
             Projects
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-            A collection of projects I've built, showcasing my skills in full-stack development, 
+            A collection of projects I&apos;ve built, showcasing my skills in full-stack development, 
             modern technologies, and problem-solving abilities.
           </p>
         </div>

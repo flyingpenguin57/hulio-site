@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     
     // 构建查询条件
     let whereClause = 'WHERE status = 1';
-    let params: any[] = [];
+    const params: string[] = [];
     
     if (category) {
       whereClause += ' AND category = $1';
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
     
     // 获取分页数据
-    let dataQuery = `
+    const dataQuery = `
       SELECT 
         id, title, summary, content, author_id, category,
         created_at, updated_at, tags, view_count, status

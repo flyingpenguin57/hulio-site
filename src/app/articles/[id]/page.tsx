@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getSql } from '@/app/lib/db';
 import { Article } from '@/app/lib/types';
+import { PRESET_CATEGORIES } from '@/app/lib/categories';
 import MarkdownRenderer from './MarkdownRenderer';
 
 interface ArticlePageProps {
@@ -120,10 +121,17 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     });
   };
   
-  const formatReadingTime = (content: string) => {
+  const formatReadingTime = (content: string, category: string | null) => {
     const wordsPerMinute = 200;
     const words = content.trim().split(/\s+/).length;
-    return Math.ceil(words / wordsPerMinute);
+    let readingTime = Math.ceil(words / wordsPerMinute);
+    
+    // 如果是编程类别，阅读时间乘以3
+    if (category === PRESET_CATEGORIES[0]) { // Programming
+      readingTime = readingTime * 3;
+    }
+    
+    return readingTime;
   };
 
   return (
@@ -199,7 +207,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                {formatReadingTime(article.content)} min read
+                {formatReadingTime(article.content, article.category)} min read
               </div>
             </div>
           </div>

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { use } from 'react';
 import { Article } from '@/app/lib/types';
-import { getCategories } from '@/app/lib/categories';
+import { getCategories, PRESET_CATEGORIES } from '@/app/lib/categories';
 
 interface ArticlesPageProps {
   searchParams: Promise<{
@@ -196,7 +196,14 @@ export default function ArticlesPage({ searchParams }: ArticlesPageProps) {
                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        {Math.ceil(article.content.length / 1000)} min read
+                        {(() => {
+                          let readingTime = Math.ceil(article.content.length / 1000);
+                          // 如果是编程类别，阅读时间乘以3
+                          if (article.category === PRESET_CATEGORIES[0]) { // Programming
+                            readingTime = readingTime * 3;
+                          }
+                          return readingTime;
+                        })()} min read
                       </span>
                     </div>
                   </div>

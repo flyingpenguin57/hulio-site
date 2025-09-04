@@ -6,61 +6,34 @@ export default function AboutPage() {
   const skills = {
     frontend: [
       'React', 'Next.js', 'TypeScript', 'JavaScript', 'HTML5', 'CSS3', 'Tailwind CSS',
-      'Redux', 'React Query', 'GraphQL', 'Webpack', 'Vite', 'Responsive Design'
+      'Redux', 'GraphQL', 'Webpack', 'Vite', 'Responsive Design'
     ],
     backend: [
-      'Node.js', 'Express', 'NestJS', 'Python', 'Django', 'FastAPI', 'PostgreSQL',
-      'MongoDB', 'Redis', 'Docker', 'Kubernetes', 'AWS', 'Vercel'
+      'Java', 'Spring', 'Spring Boot', 'Spring Cloud', 'Go', 'Gin', 'Mysql', 'PostgreSQL',
+      'MongoDB', 'Redis', 'Docker', 'Kubernetes', 'AWS', 'Vercel', 'Nginx', 'RocketMQ', 'Kafka', 
+      'Elasticsearch', 'Prometheus', 'Grafana'
     ],
     tools: [
-      'Git', 'GitHub', 'VS Code', 'Postman', 'DBeaver', 'Figma', 'Adobe XD',
-      'Jira', 'Confluence', 'Slack', 'Discord', 'Notion'
+      'Git', 'GitHub', 'VS Code', 'Postman', 'DBeaver', 'Figma', 'Jira', 'Slack', 'Discord'
     ],
     languages: [
-      'JavaScript/TypeScript', 'Python', 'Java', 'C#', 'SQL', 'Go', 'Rust'
+      'JavaScript/TypeScript', 'Java', 'SQL', 'Go', 'Rust'
     ]
   };
 
   const experiences = [
     {
       title: 'Senior Full Stack Developer',
-      company: 'Tech Company',
-      period: '2022 - Present',
+      company: 'Iflytek',
+      period: '2024 - Present',
       description: 'Leading development of enterprise web applications, mentoring junior developers, and implementing best practices for scalable architecture.'
     },
     {
-      title: 'Full Stack Developer',
-      company: 'Startup',
-      period: '2020 - 2022',
+      title: 'Senior Backend Developer',
+      company: 'Ebay CCOE',
+      period: '2020 - 2024',
       description: 'Built and maintained multiple web applications, worked with modern frameworks, and collaborated with cross-functional teams.'
     },
-    {
-      title: 'Frontend Developer',
-      company: 'Digital Agency',
-      period: '2018 - 2020',
-      description: 'Developed responsive websites and web applications, optimized performance, and ensured cross-browser compatibility.'
-    }
-  ];
-
-  const projects = [
-    {
-      title: 'E-commerce Platform',
-      description: 'Full-stack e-commerce solution with React, Node.js, and PostgreSQL. Features include user authentication, payment processing, and admin dashboard.',
-      tech: ['React', 'Node.js', 'PostgreSQL', 'Stripe', 'Redis'],
-      link: '#'
-    },
-    {
-      title: 'Task Management App',
-      description: 'Real-time collaborative task management application with real-time updates, user roles, and advanced filtering.',
-      tech: ['Next.js', 'TypeScript', 'Socket.io', 'MongoDB', 'Tailwind CSS'],
-      link: '#'
-    },
-    {
-      title: 'API Gateway Service',
-      description: 'Microservices API gateway with authentication, rate limiting, and request routing. Built for high-performance enterprise applications.',
-      tech: ['Node.js', 'Express', 'Redis', 'Docker', 'Kubernetes'],
-      link: '#'
-    }
   ];
 
   return (
@@ -252,37 +225,6 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Featured Projects */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Featured Projects</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project, index) => (
-              <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:shadow-lg transition-shadow duration-200">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">{project.title}</h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">
-                  {project.description}
-                </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tech.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-                <Link
-                  href={project.link}
-                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium"
-                >
-                  View Project →
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Contact & Social */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Let's Connect</h2>
@@ -297,14 +239,14 @@ export default function AboutPage() {
                   <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  <span className="text-gray-700 dark:text-gray-300">hello@example.com</span>
+                  <span className="text-gray-700 dark:text-gray-300">liqinghao4679@gmail.com</span>
                 </div>
                 <div className="flex items-center">
                   <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
-                  <span className="text-gray-700 dark:text-gray-300">San Francisco, CA</span>
+                  <span className="text-gray-700 dark:text-gray-300">HEFEI, CHINA</span>
                 </div>
               </div>
             </div>
@@ -321,7 +263,7 @@ export default function AboutPage() {
                   </svg>
                 </a>
                 <a
-                  href="#"
+                  href="https://github.com/hulio-xyz/"
                   className="w-10 h-10 bg-gray-800 hover:bg-gray-900 text-white rounded-lg flex items-center justify-center transition-colors duration-200"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

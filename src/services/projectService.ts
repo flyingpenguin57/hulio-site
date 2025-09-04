@@ -49,10 +49,12 @@ export class ProjectService {
   // 创建新项目
   static async createProject(projectData: CreateProjectRequest): Promise<Project> {
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch(API_BASE_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(projectData),
       });
@@ -81,10 +83,12 @@ export class ProjectService {
   // 更新项目
   static async updateProject(id: number, projectData: UpdateProjectRequest): Promise<Project> {
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch(`${API_BASE_URL}/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(projectData),
       });
@@ -116,8 +120,12 @@ export class ProjectService {
   // 删除项目
   static async deleteProject(id: number): Promise<void> {
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch(`${API_BASE_URL}/${id}`, {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
       });
 
       if (!response.ok) {

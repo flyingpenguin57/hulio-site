@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "jsonwebtoken": "^9.0.2",
     "md-editor-rt": "^5.8.4",
     "next": "15.5.2",
     "postgres": "^3.4.7",

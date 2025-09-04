@@ -41,10 +41,12 @@ export class ArticleService {
   // 创建文章
   static async createArticle(article: CreateArticleRequest): Promise<Article> {
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch(API_BASE, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(article),
       });
@@ -65,10 +67,12 @@ export class ArticleService {
   // 更新文章
   static async updateArticle(id: number, article: UpdateArticleRequest): Promise<Article> {
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch(`${API_BASE}/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(article),
       });
@@ -89,8 +93,12 @@ export class ArticleService {
   // 删除文章
   static async deleteArticle(id: number): Promise<void> {
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch(`${API_BASE}/${id}`, {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
       });
       
       const result = await response.json();

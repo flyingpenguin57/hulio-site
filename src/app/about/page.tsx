@@ -46,7 +46,7 @@ export default function AboutPage() {
               <span className="text-white text-4xl font-bold">👨‍💻</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Hi, I'm a Full Stack Developer
+              Hi, I&apos;m a Full Stack Developer
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
               I build modern, scalable web applications and share my knowledge with the developer community. 
@@ -82,15 +82,15 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-                I'm a passionate full-stack developer with over 5 years of experience building web applications. 
+                I&apos;m a passionate full-stack developer with over 5 years of experience building web applications. 
                 I love solving complex problems and turning ideas into reality through clean, efficient code.
               </p>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-                When I'm not coding, you'll find me writing technical articles, contributing to open-source projects, 
+                When I&apos;m not coding, you&apos;ll find me writing technical articles, contributing to open-source projects, 
                 or exploring new technologies. I believe in continuous learning and sharing knowledge with the community.
               </p>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                I'm always excited to work on challenging projects and collaborate with like-minded developers 
+                I&apos;m always excited to work on challenging projects and collaborate with like-minded developers 
                 who are passionate about creating amazing digital experiences.
               </p>
             </div>
@@ -227,11 +227,11 @@ export default function AboutPage() {
 
         {/* Contact & Social */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Let's Connect</h2>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Let&apos;s Connect</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
-                I'm always interested in hearing about new opportunities, interesting projects, 
+                I&apos;m always interested in hearing about new opportunities, interesting projects, 
                 or just want to chat about technology and development. Feel free to reach out!
               </p>
               <div className="space-y-3">

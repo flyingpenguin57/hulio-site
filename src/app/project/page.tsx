@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { Project } from '@/app/lib/types';
 
 export default function ProjectsPage() {
-  const [filter, setFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,25 +39,6 @@ export default function ProjectsPage() {
 
     fetchPublishedProjects();
   }, []);
-
-  // 过滤和搜索项目
-  const filteredProjects = projects.filter(project => {
-    const matchesSearch = project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         (project.description && project.description.toLowerCase().includes(searchQuery.toLowerCase()));
-    
-    if (filter === 'all') return matchesSearch;
-    if (filter === 'recent') {
-      const threeMonthsAgo = new Date();
-      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-      return matchesSearch && new Date(project.created_time) > threeMonthsAgo;
-    }
-    if (filter === 'updated') {
-      const oneMonthAgo = new Date();
-      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-      return matchesSearch && new Date(project.updated_time) > oneMonthAgo;
-    }
-    return matchesSearch;
-  });
 
   const formatDate = (dateString: string | Date) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -143,9 +123,9 @@ export default function ProjectsPage() {
         </div>
 
         {/* Projects Grid */}
-        {filteredProjects.length > 0 ? (
+        {projects.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProjects.map((project) => (
+            {projects.map((project) => (
               <div
                 key={project.id}
                 className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group"
@@ -272,8 +252,7 @@ export default function ProjectsPage() {
 
         {/* Stats */}
         <div className="mt-12 text-center text-sm text-gray-500 dark:text-gray-400">
-          Showing {filteredProjects.length} of {projects.length} published projects
-          {filter !== 'all' && ` (${filter} filter applied)`}
+          Showing {projects.length} of {projects.length} published projects
         </div>
       </div>
     </div>

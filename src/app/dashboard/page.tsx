@@ -3,6 +3,9 @@ import { getSql } from '@/app/lib/db';
 import { Article } from '@/app/lib/types';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 
+// 强制动态渲染，防止静态生成
+export const dynamic = 'force-dynamic';
+
 // 获取文章数据
 async function getArticles(): Promise<Article[]> {
   try {

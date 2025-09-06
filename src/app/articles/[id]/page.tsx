@@ -5,6 +5,9 @@ import { Article } from '@/app/lib/types';
 import { PRESET_CATEGORIES } from '@/app/lib/categories';
 import MarkdownRenderer from './MarkdownRenderer';
 
+// 强制动态渲染，确保浏览量实时更新
+export const dynamic = 'force-dynamic';
+
 interface ArticlePageProps {
   params: Promise<{ id: string }>;
 }

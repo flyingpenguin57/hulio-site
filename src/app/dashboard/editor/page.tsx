@@ -18,6 +18,38 @@ export default function Editor() {
   const [tags, setTags] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // 图片上传函数
+  const handleImageUpload = async (files: File[], callback: (urls: string[]) => void) => {
+    try {
+      const token = localStorage.getItem('token');
+      const uploadPromises = files.map(async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('Upload failed');
+        }
+
+        const { url } = await response.json();
+        return url;
+      });
+
+      const urls = await Promise.all(uploadPromises);
+      callback(urls);
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('Failed to upload image. Please try again.');
+    }
+  };
+
   // 根据主题设置编辑器主题
   const editorTheme = theme === 'dark' ? 'dark' : 'light';
 
@@ -140,8 +172,9 @@ export default function Editor() {
             language="en-US"
             theme={editorTheme}
             previewTheme={editorTheme}
-            codeTheme={editorTheme === 'dark' ? 'github-dark' : 'github'}
+            codeTheme={editorTheme === 'dark' ? 'vs-dark' : 'vs'}
             style={{ height: '70vh' }}
+            onUploadImg={handleImageUpload}
             toolbars={[
               'bold',
               'underline',
